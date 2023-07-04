@@ -1,0 +1,7 @@
+resolver:
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/21/1.yaml
+packages:
+- .
+extra-deps:
+- stm-2.5.1.0
+- network-3.1.4.0
