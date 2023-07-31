@@ -48,6 +48,8 @@ executables:
     - game-server
     - stm
     - network
+    - bytestring
+    - parsec
 
 tests:
   game-server-test:
