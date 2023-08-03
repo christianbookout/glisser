@@ -1,6 +1,14 @@
 {-# OPTIONS_GHC -funbox-strict-fields #-}
+{-# LANGUAGE InstanceSigs #-}
 
-module Glisser.Types (Team(..), Direction(..), GameObject(..), Board(..), GameRow(..)) where
+module Glisser.Types
+  ( Team(..)
+  , Direction(..)
+  , GameObject(..)
+  , Board(..)
+  , GameRow
+  , Move
+  ) where
 import Data.List (group)
 
 -- | A team to represent a player or game piece.
@@ -20,34 +28,42 @@ data GameObject
     deriving Eq
 
 -- | A row of game objects.
-newtype GameRow = GameRow [GameObject]
+type GameRow = [GameObject]
 
 -- | A board is a 2D array of game objects.
 newtype Board = Board [GameRow]
 
-instance Show Team where
-    show A = "A"
-    show B = "B"
-    show C = "C"
-    show D = "D"
+type Move = (Int, Int, Direction)
 
-instance Show Direction where
-    show DirUp = "U"
-    show DirDown = "D"
-    show DirLeft = "L"
-    show DirRight = "R"
+-- TODO perhaps these should be moved to a Read module
 
-instance Show GameObject where
-    show (GLPiece _) = "P"
-    show (GLGoal _ _) = "G"
-    show (GLBlock _) = "B"
-    show GLEmpty = "E"
+class ToGlisserFen a where
+  -- | Convert a type to a Glisser FEN string
+  toGlisserFen :: a -> String
 
-instance Show GameRow where
-  show (GameRow objs) = concatMap processEmpties $ group objs
+instance ToGlisserFen Team where
+    toGlisserFen A = "A"
+    toGlisserFen B = "B"
+    toGlisserFen C = "C"
+    toGlisserFen D = "D"
+
+instance ToGlisserFen Direction where
+    toGlisserFen DirUp = "U"
+    toGlisserFen DirDown = "D"
+    toGlisserFen DirLeft = "L"
+    toGlisserFen DirRight = "R"
+
+instance ToGlisserFen GameObject where
+    toGlisserFen (GLPiece _) = "P"
+    toGlisserFen (GLGoal _ _) = "G"
+    toGlisserFen (GLBlock _) = "B"
+    toGlisserFen GLEmpty = "E"
+
+instance ToGlisserFen Board where
+  toGlisserFen (Board board) =
+      concatMap (\row ->
+           concatMap processEmpties (group row) ++ "/"
+      ) board
     where
       processEmpties g@(GLEmpty:_) = show $ length g
-      processEmpties g = concatMap show g
-
-instance Show Board where
-  show (Board board) = concatMap (\(GameRow row) -> show row ++ "\n") board
+      processEmpties g = concatMap toGlisserFen g
