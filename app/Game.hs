@@ -8,13 +8,13 @@ newtype PlayerId = PlayerId Int deriving (Eq, Ord, Show)
 
 -- A Player has an associated id and socket for communication.
 data Player = Player
-  { playerId    :: PlayerId
-  , playerSocket :: Socket
-  }
+    { playerId    :: PlayerId
+    , playerSocket :: Socket
+    }
 
 -- Each game state will be unique to the game type. The `GameState` type variable allows this.
 data GameState gameState = GameState
-  { gameId      :: Int
-  , players     :: [Player]
-  , gameState   :: TVar gameState
-  }
+    { gameId      :: Int
+    , players     :: [Player]
+    , gameState   :: TVar gameState
+    }
