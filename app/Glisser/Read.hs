@@ -1,4 +1,4 @@
-module Glisser.Read (board) where
+module Glisser.Read (parseBoard, parseMove) where
 
 import Glisser.Types
 
@@ -58,7 +58,23 @@ gameRow :: Parser GameRow
 gameRow = do
     objects <- concat <$> many ((:[]) <$> gameObject <|> emptySpaces)
     guard (length objects == 14)  -- A board's length is 14. TODO: This should be dynamic based on metadata at some point.
-    return $ GameRow objects
+    return objects
 
 board :: Parser Board
 board = Board <$> many gameRow <* eof
+
+parseBoard :: String -> Either ParseError Board
+parseBoard = parse board ""
+
+-- | Parse a move by parsing a number specifying the x coordinate, a comma, a
+-- number specifying the y coordinate, and a direction.
+move :: Parser (Int, Int, Direction)
+move = do
+    x <- many1 digit
+    _ <- char ','
+    y <- many1 digit
+    d <- direction
+    return (read x, read y, d)
+
+parseMove :: String -> Either ParseError Move
+parseMove = parse move ""
