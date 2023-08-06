@@ -54,7 +54,7 @@ emptySpaces = try $ do
 -- | Parse a row of a game board. A row is a list of game objects that are
 -- either pieces, goals, blocks, or empty spaces. Its length must match the
 -- board's size.
-gameRow :: Parser GameRow
+gameRow :: Parser [GameObject]
 gameRow = do
     objects <- concat <$> many ((:[]) <$> gameObject <|> emptySpaces)
     guard (length objects == 14)  -- A board's length is 14. TODO: This should be dynamic based on metadata at some point.
@@ -68,13 +68,12 @@ parseBoard = parse board ""
 
 -- | Parse a move by parsing a number specifying the x coordinate, a comma, a
 -- number specifying the y coordinate, and a direction.
-move :: Parser (Int, Int, Direction)
+move :: Parser Move
 move = do
     x <- many1 digit
     _ <- char ','
     y <- many1 digit
-    d <- direction
-    return (read x, read y, d)
+    Move (read x, read y) <$> direction
 
 parseMove :: String -> Either ParseError Move
 parseMove = parse move ""
