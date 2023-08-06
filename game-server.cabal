@@ -38,10 +38,13 @@ library
 executable game-server-exe
   main-is: Main.hs
   other-modules:
+      Client
       Game
       Glisser.Glisser
       Glisser.Read
       Glisser.Types
+      Glisser.Write
+      Server
       Paths_game_server
   hs-source-dirs:
       app
@@ -53,7 +56,6 @@ executable game-server-exe
     , network
     , parsec
     , stm
-    , transformers
   default-language: Haskell2010
 
 test-suite game-server-test
