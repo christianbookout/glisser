@@ -6,10 +6,17 @@ module Glisser.Types
   , Direction(..)
   , GameObject(..)
   , Board(..)
-  , GameRow
-  , Move
+  -- , GameRow
+  , Move(..)
+  , Vector2
+  , addPos
+  , Glisser
+  , isPiece
+  , isGoal
+  , isBlock
+  , isEmpty
+  , getDirection
   ) where
-import Data.List (group)
 
 -- | A team to represent a player or game piece.
 data Team = A | B | C | D deriving Eq
@@ -27,43 +34,49 @@ data GameObject
     | GLEmpty
     deriving Eq
 
--- | A row of game objects.
-type GameRow = [GameObject]
+isPiece :: GameObject -> Bool
+isPiece (GLPiece _) = True
+isPiece _ = False
+
+isGoal :: GameObject -> Bool
+isGoal (GLGoal _ _) = True
+isGoal _ = False
+
+isBlock :: GameObject -> Bool
+isBlock (GLBlock _) = True
+isBlock _ = False
+
+isEmpty :: GameObject -> Bool
+isEmpty GLEmpty = True
+isEmpty _ = False
 
 -- | A board is a 2D array of game objects.
-newtype Board = Board [GameRow]
+newtype Board = Board [[GameObject]]
 
-type Move = (Int, Int, Direction)
+data Move = Move Vector2 Direction
 
--- TODO perhaps these should be moved to a Read module
+type Vector2 = (Int, Int)
 
-class ToGlisserFen a where
-  -- | Convert a type to a Glisser FEN string
-  toGlisserFen :: a -> String
+getChange :: Direction -> Vector2
+getChange DirUp = (0, -1)
+getChange DirDown = (0, 1)
+getChange DirLeft = (-1, 0)
+getChange DirRight = (1, 0)
 
-instance ToGlisserFen Team where
-    toGlisserFen A = "A"
-    toGlisserFen B = "B"
-    toGlisserFen C = "C"
-    toGlisserFen D = "D"
+getDirection :: Vector2 -> Direction
+getDirection (x, y)
+  | x == y && y > 0 = DirUp
+  | x == y && y < 0 = DirDown
+  | x > y && y == 0 = DirLeft
+  | otherwise = DirRight
 
-instance ToGlisserFen Direction where
-    toGlisserFen DirUp = "U"
-    toGlisserFen DirDown = "D"
-    toGlisserFen DirLeft = "L"
-    toGlisserFen DirRight = "R"
+oppositeDir :: Direction -> Direction
+oppositeDir DirUp = DirDown
+oppositeDir DirDown = DirUp
+oppositeDir DirLeft = DirRight
+oppositeDir DirRight = DirLeft
 
-instance ToGlisserFen GameObject where
-    toGlisserFen (GLPiece _) = "P"
-    toGlisserFen (GLGoal _ _) = "G"
-    toGlisserFen (GLBlock _) = "B"
-    toGlisserFen GLEmpty = "E"
+addPos :: Vector2 -> Vector2 -> Vector2
+addPos (x1, y1) (x2, y2) =  (x1 + x2, y1 + y2)
 
-instance ToGlisserFen Board where
-  toGlisserFen (Board board) =
-      concatMap (\row ->
-           concatMap processEmpties (group row) ++ "/"
-      ) board
-    where
-      processEmpties g@(GLEmpty:_) = show $ length g
-      processEmpties g = concatMap toGlisserFen g
+type Glisser a = Maybe a
