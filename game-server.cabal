@@ -41,6 +41,7 @@ executable game-server-exe
       Client
       Game
       Glisser.Glisser
+      Glisser.Protocol
       Glisser.Read
       Glisser.Types
       Glisser.Write
