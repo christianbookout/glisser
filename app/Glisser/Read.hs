@@ -63,8 +63,12 @@ gameRow = do
 board :: Parser Board
 board = Board <$> many gameRow <* eof
 
-parseBoard :: String -> Either ParseError Board
-parseBoard = parse board ""
+eitherToMaybe :: Either a b -> Maybe b
+eitherToMaybe (Left _) = Nothing
+eitherToMaybe (Right x) = Just x
+
+parseBoard :: String -> Maybe Board
+parseBoard = eitherToMaybe . parse board ""
 
 -- | Parse a move by parsing a number specifying the x coordinate, a comma, a
 -- number specifying the y coordinate, and a direction.
@@ -75,5 +79,5 @@ move = do
     y <- many1 digit
     Move (read x, read y) <$> direction
 
-parseMove :: String -> Either ParseError Move
-parseMove = parse move ""
+parseMove :: String -> Maybe Move
+parseMove = eitherToMaybe . parse move ""
