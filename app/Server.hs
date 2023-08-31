@@ -26,7 +26,7 @@ runServer mhost port = withSocketsDo $ do -- withSocketsDo is only needed for ol
     open addr = do
         sock <- socket (addrFamily addr) (addrSocketType addr) (addrProtocol addr)
         bind sock (addrAddress addr)
-        listen sock 5
+        listen sock 4 -- 5 is the max, but we only listen for 4
         return sock
     loop :: Connections -> Socket -> IO ()
     loop conns sock = forever $ do
