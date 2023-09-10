@@ -1,4 +1,12 @@
 cradle:
-  cabal:
+  multi:
+    - path: "./test"
+      config:
+        cradle:
+          cabal:
+            component: "game-server:exe:game-server-exe"
     - path: "./app"
-      component: "game-server:exe:game-server-exe"
+      config:
+        cradle:
+          cabal:
+            component: "game-server:exe:game-server-exe"

@@ -25,14 +25,26 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Client
+      Game
+      Glisser.Glisser
+      Glisser.Protocol
+      Glisser.Read
+      Glisser.Types
+      Glisser.Write
+      Main
+      Server
   other-modules:
       Paths_game_server
   hs-source-dirs:
-      src
+      app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , bytestring
+    , network
+    , parsec
+    , stm
   default-language: Haskell2010
 
 executable game-server-exe
