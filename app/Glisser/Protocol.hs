@@ -12,11 +12,11 @@ data ErrorCode =
     deriving (Show, Eq, Enum)
 
 data Command =
-    SetBoard Board
-  | MakeMove Move
+    SetBoard !Board
+  | MakeMove !Move
   | TurnStart
-  | Error ErrorCode
-  | GameEnd Team
+  | Error !ErrorCode
+  | GameEnd !Team
   | Connect
   | Disconnect
   | JoinGame

@@ -55,22 +55,23 @@ isEmpty _ = False
 newtype Board = Board [[GameObject]]
 
 -- | A move is a position and a direction.
-data Move = Move Vector2 Direction
+data Move = Move !Vector2 !Direction
 
--- | A vector is a tuple of two integers.
+-- | A vector2 is a tuple of two integers.
 type Vector2 = (Int, Int)
 
--- | Convert a direction type to a vector.
+-- | Convert a direction type to a direction vector.
 getChange :: Direction -> Vector2
 getChange DirUp = (0, -1)
 getChange DirDown = (0, 1)
 getChange DirLeft = (-1, 0)
 getChange DirRight = (1, 0)
 
+-- | Convert a vector to a direction type. Does not support diagonals.
 getDirection :: Vector2 -> Direction
 getDirection (x, y)
-  | x == y && y > 0 = DirUp
-  | x == y && y < 0 = DirDown
+  | x == 0 && y > 0 = DirUp
+  | x == 0 && y < 0 = DirDown
   | x > y && y == 0 = DirLeft
   | otherwise = DirRight
 
