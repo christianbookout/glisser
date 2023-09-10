@@ -37,11 +37,7 @@ makeMove :: Board -> Move -> Glisser Board
 makeMove board (Move pos dir) = do
     obj <- getObject board pos
     guard (isPiece obj || isBlock obj)  -- Only pieces and blocks can move
-    let posChange = case dir of
-          DirUp -> (0, -1)
-          DirDown -> (0, 1)
-          DirLeft ->  (-1, 0)
-          DirRight ->  (1, 0)
+    let posChange = getChange dir
     let nextPos = addPos pos posChange
     nextObject <- getObject board nextPos
     guard (isEmpty nextObject)  -- Ensure there's at least one empty space
