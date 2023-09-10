@@ -1,7 +1,11 @@
-module Glisser.Protocol where
-import Glisser.Types as Gl
+module Glisser.Protocol
+    ( Command (..)
+    , ErrorCode (..)
+    , readCommand
+    ) where
+import Glisser.Types as Gl ( Board, Move, Team )
 import Glisser.Write (serialize)
-import Glisser.Read
+import Glisser.Read ( parseBoard, parseMove, readTeam )
 
 data ErrorCode =
     MoveFailed
@@ -33,19 +37,13 @@ instance Show Command where
 
 readCommand :: String -> Maybe Command
 readCommand str = case words str of
-    ["SET_BOARD", boardStr] -> case parseBoard boardStr of
-        Just board -> Just $ SetBoard board
-        Nothing -> Nothing
-    ["MAKE_MOVE", moveStr] -> case parseMove moveStr of
-        Just move -> Just $ MakeMove move
-        Nothing -> Nothing
+    ["SET_BOARD", boardStr] -> SetBoard <$> parseBoard boardStr
+    ["MAKE_MOVE", moveStr] -> MakeMove <$> parseMove moveStr
     ["TURN_START"] -> Just TurnStart
     -- ["ERROR", codeStr] -> case readErrorCode codeStr of
     --     Just code -> Just $ Error code
     --     Nothing -> Nothing
-    -- ["GAME_END", teamStr] -> case readTeam teamStr of
-    --     Just team -> Just $ GameEnd team
-    --     Nothing -> Nothing
+    ["GAME_END", teamStr] -> GameEnd <$> readTeam teamStr
     ["CONNECT"] -> Just Connect
     ["DISCONNECT"] -> Just Disconnect
     ["JOIN_GAME"] -> Just JoinGame

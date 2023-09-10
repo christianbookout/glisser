@@ -1,11 +1,14 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Server (runServer) where
 
 import Network.Socket
 import Network.Socket.ByteString (recv, sendAll)
+import qualified Data.ByteString.Char8 as C8
 import Control.Concurrent
 import Control.Exception
 import qualified Data.ByteString as BS
 import Control.Monad (forever, unless)
+import Glisser.Protocol (readCommand, Command (..))
 
 type Connections = MVar [Socket]
 
@@ -15,7 +18,7 @@ runServer mhost port = withSocketsDo $ do -- withSocketsDo is only needed for ol
     addr <- resolve
     conns <- newMVar [] -- Create MVar holding a list of sockets
     bracket (open addr) close (loop conns)
-  where   
+  where
     -- Resolve the address to bind to
     resolve :: IO AddrInfo
     resolve = do
@@ -33,16 +36,32 @@ runServer mhost port = withSocketsDo $ do -- withSocketsDo is only needed for ol
         (conn, peer) <- accept sock
         putStrLn $ "Connected to " ++ show peer
         modifyMVar_ conns (\connList -> return $ conn:connList)
-        forkFinally (talk conns conn) (\_ -> closeConn conns conn)
+        forkFinally (gameLoop conns conn) (\_ -> closeConn conns conn)
     closeConn :: Connections -> Socket -> IO ()
     closeConn conns conn = do
-        putStrLn "Closing connection" 
+        putStrLn "Closing connection"
         modifyMVar_ conns $ \connList -> return (filter (/= conn) connList)
         close conn
-    talk :: Connections -> Socket -> IO ()
-    talk conns conn = forever $ do
-        msg <- recv conn 1024
-        unless (BS.null msg) $ do
-            print msg
-            connList <- readMVar conns
-            mapM_ (`sendAll` msg) connList
+
+-- | The game loop. This is where the server will receive messages from clients
+-- and relay them to all other clients in the same game.
+gameLoop :: Connections -> Socket -> IO ()
+gameLoop conns conn = forever $ do
+    msg <- C8.unpack <$> recv conn 1024
+    case readCommand msg of
+        Just (SetBoard board) -> return ()
+        Just (MakeMove move) -> return ()
+        Just TurnStart -> return ()
+        Just (Error e) -> return ()
+        Just (GameEnd winner) -> return ()
+        Just Connect -> return ()
+        Just Disconnect -> return ()
+        Just JoinGame -> return ()
+        Just LeaveGame -> return ()
+        Just Forfeit -> return ()
+        Nothing -> return ()
+  where 
+    sendToAll :: BS.ByteString -> IO ()
+    sendToAll msg = do
+        connList <- readMVar conns
+        mapM_ (`sendAll` msg) connList
