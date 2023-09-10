@@ -1,4 +1,4 @@
-module Glisser.Read (parseBoard, parseMove) where
+module Glisser.Read (parseBoard, parseMove, readTeam) where
 
 import Glisser.Types
 
@@ -13,6 +13,9 @@ team = (char 'A' >> return A)
    <|> (char 'B' >> return B)
    <|> (char 'C' >> return C)
    <|> (char 'D' >> return D)
+   
+readTeam :: String -> Maybe Team
+readTeam = eitherToMaybe . parse team ""
 
 -- | Parse a direction. Either U, D, L, or R.
 direction :: Parser Direction
