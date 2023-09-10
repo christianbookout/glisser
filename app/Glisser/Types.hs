@@ -1,5 +1,4 @@
 {-# OPTIONS_GHC -funbox-strict-fields #-}
-{-# LANGUAGE InstanceSigs #-}
 
 module Glisser.Types
   ( Team(..)
@@ -16,6 +15,8 @@ module Glisser.Types
   , isBlock
   , isEmpty
   , getDirection
+  , getChange
+  , oppositeDir
   ) where
 
 -- | A team to represent a player or game piece.
@@ -27,7 +28,7 @@ data Direction = DirUp | DirDown | DirLeft | DirRight deriving Eq
 -- | A game object representing a square of the board.
 data GameObject
     = GLPiece !Team -- ^ Game piece and team it belongs to
-    | GLGoal !Direction !Team 
+    | GLGoal !Direction !Team
     -- ^ Goal and team who wants to score inside of it, as well as the direction
     -- the goal faces
     | GLBlock !Team -- ^ Block piece and team it belongs to
@@ -53,10 +54,13 @@ isEmpty _ = False
 -- | A board is a 2D array of game objects.
 newtype Board = Board [[GameObject]]
 
+-- | A move is a position and a direction.
 data Move = Move Vector2 Direction
 
+-- | A vector is a tuple of two integers.
 type Vector2 = (Int, Int)
 
+-- | Convert a direction type to a vector.
 getChange :: Direction -> Vector2
 getChange DirUp = (0, -1)
 getChange DirDown = (0, 1)

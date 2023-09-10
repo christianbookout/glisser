@@ -1,6 +1,12 @@
-module Glisser.Write (Serializable(..)) where
+module Glisser.Write (Serializable (..)) where
 
 import Glisser.Types
+    ( Board(..)
+    , Direction(..)
+    , GameObject(..)
+    , Move(..)
+    , Team(..)
+    )
 
 import Data.List (group)
 
