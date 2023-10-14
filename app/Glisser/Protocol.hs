@@ -1,7 +1,7 @@
+{-# LANGUAGE InstanceSigs #-}
 module Glisser.Protocol
     ( Command (..)
     , ErrorCode (..)
-    , readCommand
     ) where
 import Glisser.Types as Gl ( Board, Move, Team )
 import Glisser.Write (serialize)
@@ -35,19 +35,23 @@ instance Show Command where
     show LeaveGame = "LEAVE_GAME"
     show Forfeit = "FORFEIT"
 
-readCommand :: String -> Maybe Command
-readCommand str = case words str of
-    ["SET_BOARD", boardStr] -> SetBoard <$> parseBoard boardStr
-    ["MAKE_MOVE", moveStr] -> MakeMove <$> parseMove moveStr
-    ["TURN_START"] -> Just TurnStart
-    -- ["ERROR", codeStr] -> case readErrorCode codeStr of
-    --     Just code -> Just $ Error code
-    --     Nothing -> Nothing
-    ["GAME_END", teamStr] -> GameEnd <$> readTeam teamStr
-    ["CONNECT"] -> Just Connect
-    ["DISCONNECT"] -> Just Disconnect
-    ["JOIN_GAME"] -> Just JoinGame
-    ["LEAVE_GAME"] -> Just LeaveGame
-    ["FORFEIT"] -> Just Forfeit
-    _ -> Nothing
+instance Read Command where
+    readsPrec :: Int -> ReadS Command
+    readsPrec _ str = case command of
+        Just cmd -> [(cmd, "")]
+        _ -> []
+        where command = case words str of
+                ["SET_BOARD", boardStr] -> SetBoard <$> parseBoard boardStr
+                ["MAKE_MOVE", moveStr] -> MakeMove <$> parseMove moveStr
+                ["TURN_START"] -> Just TurnStart
+                -- ["ERROR", codeStr] -> case readErrorCode codeStr of
+                --     Just code -> Just $ Error code
+                --     Nothing -> Nothing
+                ["GAME_END", teamStr] -> GameEnd <$> readTeam teamStr
+                ["CONNECT"] -> Just Connect
+                ["DISCONNECT"] -> Just Disconnect
+                ["JOIN_GAME"] -> Just JoinGame
+                ["LEAVE_GAME"] -> Just LeaveGame
+                ["FORFEIT"] -> Just Forfeit
+                _ -> Nothing
 

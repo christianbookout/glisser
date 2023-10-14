@@ -35,9 +35,15 @@ ghc-options:
 
 library:
   source-dirs: app
+  dependencies:
+    - stm
+    - network
+    - bytestring
+    - parsec
+    - text
 
 executables:
-  game-server-exe:
+  game-server:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -50,6 +56,7 @@ executables:
     - network
     - bytestring
     - parsec
+    - text
 
 tests:
   game-server-test:
@@ -61,3 +68,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - game-server
+    - stm
+    - network
+    - bytestring
+    - parsec

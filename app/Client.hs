@@ -8,6 +8,10 @@ import Network.Socket.ByteString (recv, sendAll)
 import Control.Exception
 import Control.Monad
 import Control.Concurrent (forkIO, threadDelay)
+import Glisser.Protocol (Command)
+import Text.Read (readMaybe)
+import qualified Data.Text as T
+import qualified Data.Text.Encoding as E
 
 runClient :: HostName -> ServiceName -> IO ()
 runClient host port = withSocketsDo $ do
@@ -30,12 +34,22 @@ runClient host port = withSocketsDo $ do
     talk conn = do
         -- Start a thread for sending messages
         _ <- forkIO $ forever $ do
-            cnt <- BS.getLine
-            sendAll conn cnt
+            putStrLn "Enter a command: "
+            msg <- getLine
+            putStrLn $ "Got Command: " ++ msg ++ "."
+            case readMaybe msg :: Maybe Command of
+                Just cmd -> do 
+                    putStrLn "sending command"
+                    sendAll conn (E.encodeUtf8 $ T.pack $ show cmd)
+                    putStrLn "finished"
+                Nothing -> putStrLn $ "Invalid command: " ++ show msg
 
         -- Start a thread for receiving messages
         _ <- forkIO $ forever $ do
             msg <- recv conn 1024
-            unless (BS.null msg) $ putStrLn $ "[Message] " ++ show msg
+            putStrLn $ "Got message: " ++ show msg
+            case readMaybe (T.unpack $ E.decodeUtf8 msg) :: Maybe Command of
+                Just cmd -> putStrLn $ "[Command] " ++ show cmd
+                Nothing -> putStrLn $ "[Invalid] " ++ show msg
 
         forever $ threadDelay maxBound

@@ -8,7 +8,8 @@ import Control.Concurrent
 import Control.Exception
 import qualified Data.ByteString as BS
 import Control.Monad (forever, unless)
-import Glisser.Protocol (readCommand, Command (..))
+import Glisser.Protocol (Command (..))
+import Text.Read (readMaybe)
 
 type Connections = MVar [Socket]
 
@@ -48,18 +49,21 @@ runServer mhost port = withSocketsDo $ do -- withSocketsDo is only needed for ol
 gameLoop :: Connections -> Socket -> IO ()
 gameLoop conns conn = forever $ do
     msg <- C8.unpack <$> recv conn 1024
-    case readCommand msg of
-        Just (SetBoard board) -> return ()
-        Just (MakeMove move) -> return ()
-        Just TurnStart -> return ()
-        Just (Error e) -> return ()
-        Just (GameEnd winner) -> return ()
-        Just Connect -> return ()
-        Just Disconnect -> return ()
-        Just JoinGame -> return ()
-        Just LeaveGame -> return ()
-        Just Forfeit -> return ()
-        Nothing -> return ()
+    putStrLn $ "Got message: " ++ msg
+    case readMaybe msg :: Maybe Command of
+        Just cmd -> putStrLn ("SENDING TO ALL: " ++ msg) >> sendToAll (C8.pack $ show cmd)
+        Nothing -> putStrLn ("Invalid command: " ++ msg)
+        -- Just (SetBoard board) -> return ()
+        -- Just (MakeMove move) -> return ()
+        -- Just TurnStart -> return ()
+        -- Just (Error e) -> return ()
+        -- Just (GameEnd winner) -> return ()
+        -- Just Connect -> return ()
+        -- Just Disconnect -> return ()
+        -- Just JoinGame -> return ()
+        -- Just LeaveGame -> return ()
+        -- Just Forfeit -> return ()
+        -- Nothing -> return ()
   where 
     sendToAll :: BS.ByteString -> IO ()
     sendToAll msg = do
