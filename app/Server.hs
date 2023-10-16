@@ -49,22 +49,14 @@ runServer mhost port = withSocketsDo $ do -- withSocketsDo is only needed for ol
 gameLoop :: Connections -> Socket -> IO ()
 gameLoop conns conn = forever $ do
     msg <- C8.unpack <$> recv conn 1024
-    putStrLn $ "Got message: " ++ msg
     case readMaybe msg :: Maybe Command of
-        Just cmd -> putStrLn ("SENDING TO ALL: " ++ msg) >> sendToAll (C8.pack $ show cmd)
+        Just cmd -> sendToOthers (C8.pack $ show cmd) conn
         Nothing -> putStrLn ("Invalid command: " ++ msg)
-        -- Just (SetBoard board) -> return ()
-        -- Just (MakeMove move) -> return ()
-        -- Just TurnStart -> return ()
-        -- Just (Error e) -> return ()
-        -- Just (GameEnd winner) -> return ()
-        -- Just Connect -> return ()
-        -- Just Disconnect -> return ()
-        -- Just JoinGame -> return ()
-        -- Just LeaveGame -> return ()
-        -- Just Forfeit -> return ()
-        -- Nothing -> return ()
   where 
+    sendToOthers :: BS.ByteString -> Socket -> IO ()
+    sendToOthers msg sock = do
+        connList <- readMVar conns
+        mapM_ (\c -> unless (c == sock) $ sendAll c msg) connList
     sendToAll :: BS.ByteString -> IO ()
     sendToAll msg = do
         connList <- readMVar conns
