@@ -1,4 +1,4 @@
-# Changelog for `game-server`
+# Changelog for `glisser`
 
 ## Unreleased
 

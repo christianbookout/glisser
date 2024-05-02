@@ -4,9 +4,9 @@ cradle:
       config:
         cradle:
           cabal:
-            component: "game-server:exe:game-server"
+            component: "glisser:exe:glisser"
     - path: "./app"
       config:
         cradle:
           cabal:
-            component: "game-server:exe:game-server"
+            component: "glisser:exe:glisser"
