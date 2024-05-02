@@ -1,3 +1,3 @@
-# game-server
+# glisser
 
-A Haskell game server library for writing multiplayer games with a client-server architecture.
+A Haskell game server for playing a Chickapig-inspired board game.
