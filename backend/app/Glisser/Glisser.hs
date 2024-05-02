@@ -14,6 +14,7 @@ getObject (Board rows) (x, y)  = do
 -- | Set a piece on the board at a given Vector2 to the given piece.
 setObject :: Board -> Vector2 -> GameObject -> Glisser Board
 setObject (Board rows) (x, y) obj = do
+    -- This may be inefficient as we split multiple times. Could use a vector, or splitAt. 
     guard $ y < length rows
     let row = rows !! y
     guard $ x < length row
@@ -41,17 +42,17 @@ makeMove board (Move pos dir) = do
     let nextPos = addPos pos posChange
     nextObject <- getObject board nextPos
     guard (isEmpty nextObject)  -- Ensure there's at least one empty space
-    board' <- setObject board pos GLEmpty
+    removedPieceBoard <- setObject board pos GLEmpty
     newPos <- if isPiece obj 
-              then traverseBoard board' nextPos posChange 
+              then traverseBoard removedPieceBoard nextPos posChange 
               else return nextPos 
-    newObject <- getObject board newPos
+    newObject <- getObject removedPieceBoard newPos
     -- When the next piece is a goal, then the piece has already been removed
     -- from the board and we're done. Otherwise just set the piece at the new
-    -- positiion to the piece we're moving.
+    -- position to the piece we're moving.
     if isGoal newObject
-        then return board'
-        else setObject board' newPos obj
+        then return removedPieceBoard
+        else setObject removedPieceBoard newPos obj
       
 
 
