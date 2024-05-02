@@ -5,7 +5,6 @@ module Glisser.Types
   , Direction(..)
   , GameObject(..)
   , Board(..)
-  -- , GameRow
   , Move(..)
   , Vector2
   , addPos
@@ -20,10 +19,10 @@ module Glisser.Types
   ) where
 
 -- | A team to represent a player or game piece.
-data Team = A | B | C | D deriving Eq
+data Team = A | B | C | D deriving (Eq, Show)
 
 -- | A direction to represent movement or facing.
-data Direction = DirUp | DirDown | DirLeft | DirRight deriving Eq
+data Direction = DirUp | DirDown | DirLeft | DirRight deriving (Eq, Show)
 
 -- | A game object representing a square of the board.
 data GameObject
@@ -33,7 +32,7 @@ data GameObject
     -- the goal faces
     | GLBlock !Team -- ^ Block piece and team it belongs to
     | GLEmpty
-    deriving Eq
+    deriving (Eq, Show)
 
 isPiece :: GameObject -> Bool
 isPiece (GLPiece _) = True
@@ -52,10 +51,10 @@ isEmpty GLEmpty = True
 isEmpty _ = False
 
 -- | A board is a 2D array of game objects.
-newtype Board = Board [[GameObject]]
+newtype Board = Board [[GameObject]] deriving Show
 
 -- | A move is a position and a direction.
-data Move = Move !Vector2 !Direction
+data Move = Move !Vector2 !Direction deriving Show
 
 -- | A vector2 is a tuple of two integers.
 type Vector2 = (Int, Int)

@@ -2,8 +2,8 @@
 
 module Main (main) where
 
-import Client (runClient)
-import Server (runServer) 
+import Glisser.Client.Client (runClient)
+import Glisser.Server.Server (runServer) 
 import System.Environment (getArgs)
 
 main :: IO ()
