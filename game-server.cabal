@@ -25,15 +25,16 @@ source-repository head
 
 library
   exposed-modules:
-      Client
-      Game
+      Glisser.Client.Client
+      Glisser.Client.Protocol
       Glisser.Glisser
-      Glisser.Protocol
       Glisser.Read
+      Glisser.Server.Game
+      Glisser.Server.Protocol
+      Glisser.Server.Server
       Glisser.Types
       Glisser.Write
       Main
-      Server
   other-modules:
       Paths_game_server
   hs-source-dirs:
@@ -42,6 +43,7 @@ library
   build-depends:
       base >=4.7 && <5
     , bytestring
+    , mtl
     , network
     , parsec
     , stm
@@ -51,14 +53,15 @@ library
 executable game-server
   main-is: Main.hs
   other-modules:
-      Client
-      Game
+      Glisser.Client.Client
+      Glisser.Client.Protocol
       Glisser.Glisser
-      Glisser.Protocol
       Glisser.Read
+      Glisser.Server.Game
+      Glisser.Server.Protocol
+      Glisser.Server.Server
       Glisser.Types
       Glisser.Write
-      Server
       Paths_game_server
   hs-source-dirs:
       app
@@ -67,6 +70,7 @@ executable game-server
       base >=4.7 && <5
     , bytestring
     , game-server
+    , mtl
     , network
     , parsec
     , stm
@@ -85,6 +89,7 @@ test-suite game-server-test
       base >=4.7 && <5
     , bytestring
     , game-server
+    , mtl
     , network
     , parsec
     , stm

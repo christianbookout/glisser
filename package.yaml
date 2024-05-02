@@ -41,6 +41,7 @@ library:
     - bytestring
     - parsec
     - text
+    - mtl
 
 executables:
   game-server:
@@ -57,6 +58,7 @@ executables:
     - bytestring
     - parsec
     - text
+    - mtl
 
 tests:
   game-server-test:
@@ -72,3 +74,4 @@ tests:
     - network
     - bytestring
     - parsec
+    - mtl
