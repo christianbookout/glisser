@@ -13,11 +13,10 @@ author:         Author name here
 maintainer:     example@example.com
 copyright:      2023 Author name here
 license:        BSD3
-license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    README.md
-    CHANGELOG.md
+    ../README.md
+    ../CHANGELOG.md
 
 source-repository head
   type: git
@@ -33,6 +32,7 @@ library
       Glisser.Server.Protocol
       Glisser.Server.Server
       Glisser.Types
+      Glisser.WebServer.API
       Glisser.Write
       Main
   other-modules:
@@ -41,8 +41,12 @@ library
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      base >=4.7 && <5
+      Cabal
+    , Spock
+    , aeson
+    , base >=4.7 && <5
     , bytestring
+    , http-types
     , mtl
     , network
     , parsec
@@ -61,15 +65,20 @@ executable glisser
       Glisser.Server.Protocol
       Glisser.Server.Server
       Glisser.Types
+      Glisser.WebServer.API
       Glisser.Write
       Paths_glisser
   hs-source-dirs:
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      Cabal
+    , Spock
+    , aeson
+    , base >=4.7 && <5
     , bytestring
     , glisser
+    , http-types
     , mtl
     , network
     , parsec
@@ -86,7 +95,10 @@ test-suite glisser-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      Cabal
+    , Spock
+    , aeson
+    , base >=4.7 && <5
     , bytestring
     , glisser
     , mtl

@@ -10,3 +10,8 @@ cradle:
         cradle:
           cabal:
             component: "glisser:exe:glisser"
+    - path: "Setup.hs"
+      config:
+        cradle:
+          cabal:
+            component: "glisser:exe:glisser"

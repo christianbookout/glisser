@@ -11,8 +11,6 @@ import Glisser.Client.Protocol (Command (..))
 import Text.Read (readMaybe)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as E
-import Control.Concurrent.STM (newTVarIO)
-import Control.Monad.STM (atomically)
 
 runClient :: HostName -> ServiceName -> IO ()
 runClient host port = withSocketsDo $ do

@@ -1,10 +1,8 @@
 module Glisser.Server.Game (GameState(..), handleCommand, defaultGameState) where
 
-import Control.Concurrent.STM.TVar (TVar)
-import Network.Socket (Socket)
 import Control.Concurrent.STM
 import Glisser.Server.Protocol (ServerCommand(..))
-import Glisser.Types ( Board(..), Team(..), Move(..))
+import Glisser.Types ( Board(..), Team(..))
 import Data.Maybe (fromJust)
 import Glisser.Glisser (makeMove)
 
