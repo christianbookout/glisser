@@ -11,10 +11,10 @@ import Web.Spock.Config as Spock
 import Network.HTTP.Types.Status (status200)
 
 import Data.Aeson as A
-import Data.Text (Text)
+import Data.Text (Text, pack)
 import GHC.Generics (Generic)
-
-type Api = SpockM () () () ()
+import qualified Text.Blaze.Html5 as H
+import Text.Blaze.Html.Renderer.String (renderHtml)
 
 type ApiAction a = SpockAction () () () a
 
@@ -32,18 +32,38 @@ newtype Chat = Chat
 instance ToJSON Chat
 instance FromJSON Chat
 
+spockHtml :: H.Html -> ApiAction ()
+spockHtml = Spock.html . pack . renderHtml
+
 runWebServer :: IO ()
 runWebServer = do
     config <- defaultSpockCfg () PCNoDatabase ()
     runSpock 8080 $ spock config $ do
         get root $ do
-            Spock.html "<div>Welcome to the Glisser API</div>"
-        post ("game" <//> var <//> "move") $ \(gameid :: Int) -> do
-            move <- jsonBody' :: ApiAction Move
+            spockHtml $ H.div "Welcome to the Glisser API"
+        -- Lichess has this as game/stream/var, should figure out why this is or if it's just inconsistent
+        get ("game" <//> var <//> "stream") $ \(gameid :: Int) -> do
+            -- Return the current game state, including the players playing
+            -- https://lichess.org/api#tag/Bot/operation/botGameStream for reference
+            -- Spock.setStatus status200
+            Spock.json $ A.object ["gameid" .= gameid]
+
+        get ("game" <//> var <//> "chat") $ \(gameid :: Int) -> do
+            -- Return the chat messages for the game
             Spock.setStatus status200
         post ("game" <//> var <//> "chat") $ \(gameid :: Int) -> do
             chat <- jsonBody' :: ApiAction Chat
-            -- Return 200: OK
             Spock.setStatus status200
-  where users :: [String]
-        users = ["bob", "alice"]
+ 
+        post ("game" <//> var <//> "move") $ \(gameid :: Int) -> do
+            move <- jsonBody' :: ApiAction Move
+            Spock.setStatus status200
+        post ("game" <//> var <//> "resign") $ \(gameid :: Int) -> do
+            Spock.setStatus status200
+        post ("game" <//> var <//> "abort") $ \(gameid :: Int) -> do
+            Spock.setStatus status200
+        post ("game" <//> var <//> "draw" <//> var) $ \(gameid :: Int) (accept :: String) -> do
+            Spock.setStatus status200
+
+        post ("game" <//> "create") $ do
+            Spock.setStatus status200

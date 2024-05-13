@@ -33,6 +33,8 @@ library
       Glisser.Server.Server
       Glisser.Types
       Glisser.WebServer.API
+      Glisser.WebServer.Game
+      Glisser.WebServer.Player
       Glisser.Write
       Main
   other-modules:
@@ -45,6 +47,7 @@ library
     , Spock
     , aeson
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , http-types
     , mtl
@@ -66,6 +69,8 @@ executable glisser
       Glisser.Server.Server
       Glisser.Types
       Glisser.WebServer.API
+      Glisser.WebServer.Game
+      Glisser.WebServer.Player
       Glisser.Write
       Paths_glisser
   hs-source-dirs:
@@ -76,6 +81,7 @@ executable glisser
     , Spock
     , aeson
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , glisser
     , http-types
@@ -99,6 +105,7 @@ test-suite glisser-test
     , Spock
     , aeson
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , glisser
     , mtl

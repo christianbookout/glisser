@@ -46,6 +46,7 @@ library:
     - Spock
     - aeson
     - http-types
+    - blaze-html
 
 executables:
   glisser:
@@ -67,6 +68,7 @@ executables:
     - Spock
     - aeson
     - http-types
+    - blaze-html
 
 tests:
   glisser-test:
@@ -86,3 +88,4 @@ tests:
     - Cabal
     - Spock
     - aeson
+    - blaze-html
