@@ -18,6 +18,20 @@ packages:
       size: 3977
   original:
     hackage: network-3.1.4.0
+- completed:
+    hackage: tasty-1.5@sha256:8da3f47fff790714f7d676692f1207aac156b41f705c55f14d1d8147a751264b,2787
+    pantry-tree:
+      sha256: d139b379075ff0204ad2aa2e20ba668534b21d03f8d712077e03e6d9294b2b8f
+      size: 1944
+  original:
+    hackage: tasty-1.5
+- completed:
+    hackage: tasty-hunit-0.10.0.3@sha256:ba774024f3a26100c559dbef41e030bdf443408ed848691f7b9aa85b6fb218c3,1545
+    pantry-tree:
+      sha256: c82bce9c756f82fa9221fc2f89b8fa52858d630a388b9288af90cb0c03e084de
+      size: 399
+  original:
+    hackage: tasty-hunit-0.10.0.3
 snapshots:
 - completed:
     sha256: c4381351ba5837a6356fcc0ebeb7a61fdcaf3a085c903a6f730f56b131d5cb58

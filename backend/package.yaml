@@ -47,6 +47,8 @@ library:
     - aeson
     - http-types
     - blaze-html
+    - tasty
+    - tasty-hunit
 
 executables:
   glisser:
@@ -69,6 +71,8 @@ executables:
     - aeson
     - http-types
     - blaze-html
+    - tasty
+    - tasty-hunit
 
 tests:
   glisser-test:
@@ -89,3 +93,5 @@ tests:
     - Spock
     - aeson
     - blaze-html
+    - tasty >= 1.5
+    - tasty-hunit

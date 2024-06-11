@@ -26,7 +26,7 @@ instance ToJSON Move
 instance FromJSON Move
 
 newtype Chat = Chat
-  { chatContent :: Text
+  { text :: Text
   } deriving (Generic, Show)
 
 instance ToJSON Chat

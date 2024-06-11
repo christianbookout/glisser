@@ -51,10 +51,10 @@ isEmpty GLEmpty = True
 isEmpty _ = False
 
 -- | A board is a 2D array of game objects.
-newtype Board = Board [[GameObject]] deriving Show
+newtype Board = Board [[GameObject]] deriving (Show, Eq)
 
 -- | A move is a position and a direction.
-data Move = Move !Vector2 !Direction deriving Show
+data Move = Move !Vector2 !Direction deriving (Show, Eq)
 
 -- | A vector2 is a tuple of two integers.
 type Vector2 = (Int, Int)

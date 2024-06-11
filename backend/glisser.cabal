@@ -54,6 +54,8 @@ library
     , network
     , parsec
     , stm
+    , tasty
+    , tasty-hunit
     , text
   default-language: Haskell2010
 
@@ -89,6 +91,8 @@ executable glisser
     , network
     , parsec
     , stm
+    , tasty
+    , tasty-hunit
     , text
   default-language: Haskell2010
 
@@ -112,4 +116,6 @@ test-suite glisser-test
     , network
     , parsec
     , stm
+    , tasty >=1.5
+    , tasty-hunit
   default-language: Haskell2010
