@@ -9,10 +9,10 @@ import Control.Monad (guard)
 -- | Parse a team. Either A, B, C, or D. Team character comes after the piece
 -- type when parsing a board.
 team :: Parser Team
-team = (char 'A' >> return A)
-   <|> (char 'B' >> return B)
-   <|> (char 'C' >> return C)
-   <|> (char 'D' >> return D)
+team = (char 'a' >> return A)
+   <|> (char 'b' >> return B)
+   <|> (char 'c' >> return C)
+   <|> (char 'd' >> return D)
    
 readTeam :: String -> Maybe Team
 readTeam = eitherToMaybe . parse team ""
@@ -58,13 +58,10 @@ emptySpaces = try $ do
 -- either pieces, goals, blocks, or empty spaces. Its length must match the
 -- board's size.
 gameRow :: Parser [GameObject]
-gameRow = do
-    objects <- concat <$> many ((:[]) <$> gameObject <|> emptySpaces)
-    guard (length objects == 14)  -- A board's length is 14. TODO: This should be dynamic based on metadata at some point.
-    return objects
+gameRow = concat <$> many ((:[]) <$> gameObject <|> emptySpaces)
 
 board :: Parser Board
-board = Board <$> many gameRow <* eof
+board = Board <$> sepBy gameRow (char '/')
 
 eitherToMaybe :: Either a b -> Maybe b
 eitherToMaybe (Left _) = Nothing
