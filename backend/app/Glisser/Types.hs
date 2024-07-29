@@ -16,10 +16,18 @@ module Glisser.Types
   , getDirection
   , getChange
   , oppositeDir
+  , isOppositeTeam
   ) where
 
 -- | A team to represent a player or game piece.
 data Team = A | B | C | D deriving (Eq, Show)
+
+isOppositeTeam :: Team -> Team -> Bool
+isOppositeTeam A D = True
+isOppositeTeam D A = True
+isOppositeTeam C B = True
+isOppositeTeam B C = True
+isOppositeTeam _ _ = False
 
 -- | A direction to represent movement or facing.
 data Direction = DirUp | DirDown | DirLeft | DirRight deriving (Eq, Show)
@@ -69,9 +77,9 @@ getChange DirRight = (1, 0)
 -- | Convert a vector to a direction type. Does not support diagonals.
 getDirection :: Vector2 -> Direction
 getDirection (x, y)
-  | x == 0 && y > 0 = DirUp
-  | x == 0 && y < 0 = DirDown
-  | x > y && y == 0 = DirLeft
+  | x == 0 && y < 0 = DirUp
+  | x == 0 && y > 0 = DirDown
+  | x < 0 && y == 0 = DirLeft
   | otherwise = DirRight
 
 oppositeDir :: Direction -> Direction

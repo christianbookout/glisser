@@ -4,7 +4,6 @@ import Glisser.Types
 
 import Text.Parsec
 import Text.Parsec.String (Parser)
-import Control.Monad (guard)
     
 -- | Parse a team. Either A, B, C, or D. Team character comes after the piece
 -- type when parsing a board.
